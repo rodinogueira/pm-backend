@@ -17,12 +17,12 @@ const getPedidoByIdController = async (req, res) => {
 
 // Controlador para criar um novo pedido
 const createPedidoController = async (req, res) => {
-  const { userEmail, frete, precoTotal, address } = req.body;
 
-  const order = { userEmail, frete, precoTotal, address }
+  const order = { userEmail, frete, precoTotal, address } = req.body;
+  
   try {
-    await sendOrderConfirmationEmail(userEmail, order);
     const pedido = await PedidoService.createPedidoService(req.body);
+    await sendOrderConfirmationEmail(userEmail, order, pedido);
     res.status(201).json(pedido);
   } catch (error) {
     res.status(500).json({ error: error.message });

@@ -24,7 +24,7 @@ transporter.verify((error, success) => {
   }
 });
 
-async function sendOrderConfirmationEmail(to, orderDetails) {
+async function sendOrderConfirmationEmail(to, orderDetails, orderId) {
   console.log("Enviando e-mail para:", to);
 
   const mailOptions = {
@@ -33,7 +33,7 @@ async function sendOrderConfirmationEmail(to, orderDetails) {
     subject: "Confirmação do Pedido",
     html: `<h1>Pedido Confirmado!</h1>
            <p>Obrigado por sua compra. Aqui estão os detalhes do seu pedido:</p>
-           <p><strong>Pedido ID:</strong> ${orderDetails.id}</p>
+           <p><strong>Pedido ID:</strong> ${orderId._id}</p>
            <p><strong>Endereço:</strong> ${orderDetails.address.rua}, ${orderDetails.address.numero}, ${orderDetails.address.complemento} - CEP: ${orderDetails.address.cep}</p>
            <p><strong>Total:</strong> ${orderDetails.precoTotal}</p>
            <p>Entraremos em contato em breve.</p>`,
