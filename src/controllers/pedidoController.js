@@ -1,4 +1,5 @@
 const PedidoService = require("../services/pedidoService");
+const { sendOrderConfirmationEmail } = require("../services/emailService");
 
 // Controlador para obter um pedido pelo ID
 const getPedidoByIdController = async (req, res) => {
@@ -16,7 +17,11 @@ const getPedidoByIdController = async (req, res) => {
 
 // Controlador para criar um novo pedido
 const createPedidoController = async (req, res) => {
+  const { userEmail, frete, precoTotal, address } = req.body;
+
+  const order = { userEmail, frete, precoTotal, address }
   try {
+    await sendOrderConfirmationEmail(userEmail, order);
     const pedido = await PedidoService.createPedidoService(req.body);
     res.status(201).json(pedido);
   } catch (error) {
