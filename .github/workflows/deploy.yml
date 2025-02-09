@@ -1,0 +1,46 @@
+name: CI/CD Pipeline para EC2
+
+on:
+  push:
+    branches:
+      - main  # Executa o pipeline ao fazer push na branch 'main'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest  # Usando Ubuntu como runner do GitHub Actions
+
+    steps:
+      # Passo 1: Fazer checkout do código
+      - name: Checkout do código
+        uses: actions/checkout@v2
+
+      # Passo 2: Fazer deploy para EC2
+      - name: Fazer deploy para EC2
+        run: |
+          # Salvar a chave SSH privada em um arquivo temporário
+          echo "${{ secrets.EC2_PRIVATE_KEY }}" > minha-chave
+          chmod 600 minha-chave
+
+          # Executar os comandos no servidor EC2
+          ssh -i minha-chave -o StrictHostKeyChecking=no ec2-user@${{ secrets.EC2_HOST }} << EOF
+            
+            # Garantir permissões corretas
+            sudo chown -R ec2-user:ec2-user /var/www/market-place-nodejs
+            cd /var/www/market-place-nodejs
+
+            # Gerenciar conflitos locais
+            git reset --hard
+            git clean -fd
+            git pull origin main
+
+            # Instalar dependências e reiniciar o PM2
+            npm install
+            pm2 restart all
+            pm2 save  # Sincronizar estado do PM2
+          EOF
+
+          # Remover a chave temporária
+          rm minha-chave
+          
+        env:
+          EC2_HOST: ${{ secrets.EC2_HOST }}
