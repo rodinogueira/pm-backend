@@ -14,15 +14,45 @@ const getProductsByOwner = async (req, res) => {
     }
 };
 
-// Lista todos os produtos
+// // Lista todos os produtos
+// const getAllProducts = async (req, res) => {
+//     try {
+//         const products = await productService.findAllProductsService(req.query.limit, req.query.offset);
+//         res.json(products);
+//     } catch (error) {
+//         res.status(500).json({ error: error.message });
+//     }
+// };
+
 const getAllProducts = async (req, res) => {
     try {
-        const products = await productService.findAllProductsService(req.query.limit, req.query.offset);
-        res.json(products);
+        // Captura page e limit da query string
+        let { page, limit } = req.query;
+        const pageToParse = JSON.parse(JSON.stringify(page));
+        
+        // Acessando a propriedade correta
+        page = Number(pageToParse.page) || 1;
+        limit = Number(limit) || 9; // Limite padrão 9
+
+        // Calcula o offset
+        const offset = (page - 1) * limit;
+
+        console.log(`Page: ${page}, Limit: ${limit}, Offset: ${offset}`);
+
+        // Obtém os produtos com base no limite e offset
+        const products = await productService.findAllProductsService(limit, offset);
+        const totalProducts = await productService.countTotalProducts();
+        const totalPages = Math.ceil(totalProducts / limit);
+
+        res.json({
+            products,
+            totalPages,
+        });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 };
+
 
 // Busca um produto por ID
 const getProductById = async (req, res) => {

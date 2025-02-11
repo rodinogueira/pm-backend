@@ -11,5 +11,7 @@ router.post("/", authMiddleware, carrinhoController.createCarrinho);
 router.put("/:id", authMiddleware, carrinhoController.updateCarrinho);
 router.delete("/:id", authMiddleware, validaId, carrinhoController.deleteCarrinho);
 router.get("/", authMiddleware, carrinhoController.getAllCarrinhos);
+// Rota para remover um produto do carrinho
+router.delete('/:carrinhoId/produto/:productId', authMiddleware, carrinhoController.removeProdutoDoCarrinho);
 
 module.exports = router;

@@ -75,6 +75,23 @@ const getAllCarrinhos = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+const removeProdutoDoCarrinho = async (req, res) => {
+  const { carrinhoId, productId } = req.params;
+  console.log(carrinhoId, productId);
+  
+  try {
+    const carrinhoAtualizado = await CarrinhoService.removeProdutoDoCarrinhoService(carrinhoId, productId);
+
+    if (!carrinhoAtualizado) {
+      return res.status(404).json({ message: "Carrinho não encontrado ou produto não encontrado" });
+    }
+
+    res.json(carrinhoAtualizado);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 
 module.exports = {
   getCarrinhoById,
@@ -82,4 +99,5 @@ module.exports = {
   updateCarrinho,
   deleteCarrinho,
   getAllCarrinhos,
+  removeProdutoDoCarrinho,
 };

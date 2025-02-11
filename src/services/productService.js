@@ -9,9 +9,15 @@ const findProductByIdService = (id) => {
     return Produto.findById(id);
 };
 
-// Serviço para encontrar todos os produtos
 const findAllProductsService = (limit, offset) => {
-    return Produto.find().limit(limit).skip(offset);
+    return Produto.find()
+        .limit(limit) // Limita o número de produtos retornados
+        .skip(offset); // Pula os produtos com base no offset
+};
+
+// Função para contar o número total de produtos
+const countTotalProducts = () => {
+    return Produto.countDocuments(); // Conta todos os produtos
 };
 
 // Serviço para criar um novo produto
@@ -76,5 +82,6 @@ module.exports = {
     deleteProductService,
     addCategoriaProductService,
     removeCategoriaProductService,
-    findProductsByOwnerService
+    findProductsByOwnerService,
+    countTotalProducts,
 };

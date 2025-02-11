@@ -113,12 +113,12 @@ const validaPedido = (req, res, next) => {
 const validaCarrinho = (req, res, next) => {
     let erros = [];
 
-    if(!req.body.precoTotal) {
-        erros.push("precoTotal")
-    }
-    if(!req.body.frete) {
-        erros.push("frete")
-    }
+    // if(!req.body.precoTotal) {
+    //     erros.push("precoTotal")
+    // }
+    // if(!req.body.frete) {
+    //     erros.push("frete")
+    // }
 
     if(erros.length == 0) {
         return next();

@@ -1,12 +1,14 @@
 const nodemailer = require("nodemailer");
 require("dotenv").config();
+const path = require("path");
+const fs = require("fs");
 
 console.log("Configurando transporte de e-mail...");
 
 const transporter = nodemailer.createTransport({
   host: process.env.EMAIL_HOST,
   port: Number(process.env.EMAIL_PORT),
-  secure: process.env.EMAIL_SECURE === "true", 
+  secure: process.env.EMAIL_SECURE === "true",
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
@@ -27,6 +29,9 @@ transporter.verify((error, success) => {
 async function sendOrderConfirmationEmail(to, orderDetails, orderId) {
   console.log("Enviando e-mail para:", to);
 
+  // Caminho absoluto da imagem
+  const imagePath = path.join(__dirname, '../../assets/images/qrcode.png');
+  
   const mailOptions = {
     from: process.env.EMAIL_USER,
     to,
@@ -36,7 +41,16 @@ async function sendOrderConfirmationEmail(to, orderDetails, orderId) {
            <p><strong>Pedido ID:</strong> ${orderId._id}</p>
            <p><strong>Endereço:</strong> ${orderDetails.address.rua}, ${orderDetails.address.numero}, ${orderDetails.address.complemento} - CEP: ${orderDetails.address.cep}</p>
            <p><strong>Total:</strong> ${orderDetails.precoTotal}</p>
-           <p>Entraremos em contato em breve.</p>`,
+           <p>Entraremos em contato em breve.</p>
+           <p>QRCode do pagamento:</p>
+           <img src="cid:qrcode_image" alt="QR Code" />`, // Referência à imagem incorporada
+    attachments: [
+      {
+        filename: 'qrcode.jpeg',  // Nome do arquivo de imagem
+        path: imagePath,           // Caminho da imagem no servidor
+        cid: 'qrcode_image',      // ID para referenciar no HTML
+      },
+    ],
   };
 
   try {
