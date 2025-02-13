@@ -106,28 +106,27 @@ const deleteProduct = async (req, res) => {
     }
 };
 
-    const addCategoriaProductController = async (req, res) => {
-        try {
-            req.body.createdAt = new Date();
-            const categoria = await productService.addCategoriaProductService(req.params.id, req.body)
-            res.status(200).send(categoria);
+const addCategoriaProductController = async (req, res) => {
+    try {
+        req.body.createdAt = new Date();
+        const categoria = await productService.addCategoriaProductService(req.params.id, req.body)
+        res.status(200).send(categoria);
 
-        } catch (error) {
-            res.status(500).json({ error: error.message });
-        }
+    } catch (error) {
+        res.status(500).json({ error: error.message });
     }
+}
 
-    const removeCategoriaProductController = async (req, res) => {
-        try {
-            req.body.createdAt = new Date();
-            const categoria = await productService.removeCategoriaProductService(req.body)
-            res.status(200).send(categoria);
+const removeCategoriaProductController = async (req, res) => {
+    try {
+        req.body.createdAt = new Date();
+        const categoria = await productService.removeCategoriaProductService(req.body)
+        res.status(200).send(categoria);
 
-        } catch (error) {
-            res.status(500).json({ error: error.message });
-        }
+    } catch (error) {
+        res.status(500).json({ error: error.message });
     }
-
+}
 
 module.exports = {
     getAllProducts,
